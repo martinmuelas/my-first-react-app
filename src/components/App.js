@@ -12,6 +12,7 @@ class App extends React.Component {
     super();
     this.addFish = this.addFish.bind(this);
     this.loadSamples = this.loadSamples.bind(this);
+    this.addToOrder = this.addToOrder.bind(this);
 
     // getInitialState
     this.state = {
@@ -38,6 +39,16 @@ class App extends React.Component {
     this.setState({ fishes: sampleFishes });
   }
 
+  addToOrder(key) {
+    // 1ro: Hago copia del State:
+    const order = {...this.state.order};
+    // 2do: Agrego o actualizo el item en la orden
+    // Si existe, le suma uno, si no existe lo agrega con valor 1
+    order[key] = order[key] + 1 || 1;
+    // 3ro: Actualizo el estado
+    this.setState({ order });
+  }
+
   render() {
     return (
       <div className="catch-of-the-day">
@@ -47,7 +58,12 @@ class App extends React.Component {
             { 
               Object
                 .keys(this.state.fishes)
-                .map(key => <Fish key={key} details={this.state.fishes[key]} />)
+                .map(key => <Fish 
+                              key={key}
+                              index={key} // key es solo para React
+                              details={this.state.fishes[key]} 
+                              addToOrder={this.addToOrder}
+                            />)
             }
           </ul>
         </div>
