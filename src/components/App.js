@@ -34,10 +34,29 @@ class App extends React.Component {
             context: this,
             state: 'fishes'
         });
+
+      // Chequeamos tambien si hay algo en el LocalStorage
+      const localStorageRef = localStorage.getItem(`order-${this.props.params.storeId}`);
+      
+      if (localStorageRef) {
+        // Actualizamos el state del componente order
+        this.setState({
+          order: JSON.parse(localStorageRef)
+        });
+      }
   }
 
   componentWillUnmount() {
     base.removeBinding(this.ref);
+  }
+
+  // Genero otro método del Component LifeCycle
+  // componentWillUpdate(): Invocado inmediatamente antes del renderizado
+  // cuando nuevas 'props' o 'state' sean recibidos. Este método no es
+  // llamado en el renderizado inicial.
+  componentWillUpdate(nextProps, nextState) {
+    localStorage.setItem(`order-${this.props.params.storeId}`, 
+      JSON.stringify(nextState.order));
   }
 
   addFish(fish) {
@@ -86,11 +105,31 @@ class App extends React.Component {
             }
           </ul>
         </div>
-        <Order fishes={this.state.fishes} order={this.state.order}/>
-        <Inventory addFish={this.addFish} loadSamples={this.loadSamples}/>
+        <Order 
+          fishes={this.state.fishes} 
+          order={this.state.order}
+          params={this.props.params}
+        />
+        <Inventory 
+          addFish={this.addFish} 
+          loadSamples={this.loadSamples}
+        />
       </div>
     )
   }
 }
 
 export default App;
+
+/*
+* Para mejorar: Existe un doble renderizado en los componentes de la order
+* y al cargar la pagina, por un segundo se puede leer 'Sorry, fish is no
+* longer available!'. Esto es lo que demora entre el renderizado inicial
+* del componente y el que realiza luego al cargar los datos desde el 
+* localStorage.
+* Para solucionarlo, habría que utilizar el LifeCycle shouldComponentUpdate()
+* que mandará a renderizar el componente solo si se cumplen ciertas
+* condiciones establecidas (debe retornar true).
+* MAS INFO SOBRE LIFECYCLES:
+* https://facebook.github.io/react/docs/react-component.html
+ */
