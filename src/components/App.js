@@ -4,7 +4,7 @@ import Order from './Order';
 import Inventory from './Inventory';
 import Fish from './Fish';
 import sampleFishes from '../sample-fishes';
-
+import base from '../base';
 
 class App extends React.Component {
   
@@ -19,6 +19,25 @@ class App extends React.Component {
       fishes: {},
       order: {}
     }
+  }
+
+  // Generamos los métodos componentWillMount() y componentWillUnmount()
+  // Ambos son parte del LifeCycle de React, tal como lo es el método
+  // render().
+  // componentWillMount(): Invocado solo una vez, tanto en el cliente como
+  // en el server, inmediatamente antes que el renderizado inicial ocurra.
+  // Si se llama a 'setState' dentro de este método, render() verá el State
+  // actualizado y será ejecutado solo una vez, a pesar del cambio de estado.
+  componentWillMount() {
+      this.ref = base.syncState(`${this.props.params.storeId}/fishes`
+        , {
+            context: this,
+            state: 'fishes'
+        });
+  }
+
+  componentWillUnmount() {
+    base.removeBinding(this.ref);
   }
 
   addFish(fish) {
