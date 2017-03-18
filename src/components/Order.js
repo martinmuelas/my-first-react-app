@@ -10,13 +10,16 @@ class Order extends React.Component {
   renderOrder(key) {
     const fish = this.props.fishes[key];
     const count = this.props.order[key];
+    // Puedo generar un botón con su comportamiento incluído y almacenar el JSX
+    // en una variable. De esta manera puedo reutilizar el código más facilmente
+    const removeButton = <button onClick={() => this.props.removeFromOrder(key)}>&times;</button>
 
     if (!fish || fish.status === 'unavailable') {
-      return <li key={key}>Sorry, {fish ? fish.name : 'fish'} is no longer unavailable!</li>
+      return <li key={key}>Sorry, {fish ? fish.name : 'fish'} is no longer unavailable! {removeButton}</li>
     }
     return (
       <li key={key}>
-        <span>{count}lbs {fish.name}</span>
+        <span>{count}lbs {fish.name} {removeButton}</span>
         <span className="price">{formatPrice(count * fish.price)}</span>
       </li>
     )

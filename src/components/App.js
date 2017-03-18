@@ -12,8 +12,10 @@ class App extends React.Component {
     super();
     this.addFish = this.addFish.bind(this);
     this.updateFish = this.updateFish.bind(this);
+    this.removeFish = this.removeFish.bind(this);
     this.loadSamples = this.loadSamples.bind(this);
     this.addToOrder = this.addToOrder.bind(this);
+    this.removeFromOrder = this.removeFromOrder.bind(this);
 
     // getInitialState
     this.state = {
@@ -83,6 +85,15 @@ class App extends React.Component {
     this.setState({ fishes });
   }
 
+  removeFish(key) {
+    // 1ro: Copio el state actual
+    const fishes = {...this.props.fishes};
+    // 2do: Elimino el fish indicado
+    fishes[key] = null; // Podría haber sido: delete fishes[key]; pero no funciona bien con Firebase
+    // 3ro: Actualizo el State
+    this.setState({ fishes });
+  }
+
   loadSamples() {
     this.setState({ fishes: sampleFishes });
   }
@@ -94,6 +105,15 @@ class App extends React.Component {
     // Si existe, le suma uno, si no existe lo agrega con valor 1
     order[key] = order[key] + 1 || 1;
     // 3ro: Actualizo el estado
+    this.setState({ order });
+  }
+
+  removeFromOrder(key) {
+    // 1ro: Copio el state actual
+    const order = {...this.state.order};
+    // 2do: Elimino el fish indicado   
+    delete order[key];
+    // 3ro: Actualizo el state
     this.setState({ order });
   }
 
@@ -119,10 +139,12 @@ class App extends React.Component {
           fishes={this.state.fishes} 
           order={this.state.order}
           params={this.props.params}
+          removeFromOrder={this.removeFromOrder}
         />
         <Inventory 
           addFish={this.addFish}
           updateFish={this.updateFish} 
+          removeFish={this.removeFish}
           loadSamples={this.loadSamples}
           fishes={this.state.fishes}
         />
