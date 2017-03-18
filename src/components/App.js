@@ -11,6 +11,7 @@ class App extends React.Component {
   constructor() {
     super();
     this.addFish = this.addFish.bind(this);
+    this.updateFish = this.updateFish.bind(this);
     this.loadSamples = this.loadSamples.bind(this);
     this.addToOrder = this.addToOrder.bind(this);
 
@@ -73,6 +74,15 @@ class App extends React.Component {
     // elemento hijo como Inventory? >>> a través de una 'Props', que agrego en Inventory.
   }
 
+  updateFish(key, updatedFish) {
+    // 1ro: Copio el state actual
+    const fishes = {...this.props.fishes};
+    // 2do: Actualizo el valor del fish
+    fishes[key] = updatedFish;
+    // 3ro: Actualizo el state
+    this.setState({ fishes });
+  }
+
   loadSamples() {
     this.setState({ fishes: sampleFishes });
   }
@@ -111,8 +121,10 @@ class App extends React.Component {
           params={this.props.params}
         />
         <Inventory 
-          addFish={this.addFish} 
+          addFish={this.addFish}
+          updateFish={this.updateFish} 
           loadSamples={this.loadSamples}
+          fishes={this.state.fishes}
         />
       </div>
     )
