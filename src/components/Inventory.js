@@ -3,20 +3,32 @@ import AddFishForm from './AddFishForm.js';
 import base from '../base';
 
 class Inventory extends React.Component {
-  constructor() {
-    super();
-    this.renderInventory = this.renderInventory.bind(this);
-    this.renderLogin = this.renderLogin.bind(this);
-    this.authenticate = this.authenticate.bind(this);
-    this.authHandler = this.authHandler.bind(this);
-    this.logout = this.logout.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.state = {
-      uid: null,
-      owner: null
-    }
+  /* 
+  *  NOTA:
+  *  Puedo ahorrarme el Binding de los métodos utilizando
+  *  'Property Initializers'. Esto es, declarar los métodos
+  *  como variables asociadas a funciones flecha. Transformo
+  *  cada método en una variable a la que se le asigna la 
+  *  función flecha correspondiente.
+  *  Luego, en este caso, el constructor pierde serntido y
+  *  puedo descartarlo.
+  *  ⬇⬇⬇⬇
+  *  */
+  // constructor() {
+  //   super();
+  //   this.renderInventory = this.renderInventory.bind(this);
+  //   this.renderLogin = this.renderLogin.bind(this);
+  //   this.authenticate = this.authenticate.bind(this);
+  //   this.authHandler = this.authHandler.bind(this);
+  //   this.logout = this.logout.bind(this);
+  //   this.handleChange = this.handleChange.bind(this);
+  // }
+  
+  state = {
+    uid: null,
+    owner: null
   }
-
+  
   componentDidMount() {
     base.onAuth((user) => {
       if (user) {
@@ -28,7 +40,7 @@ class Inventory extends React.Component {
   // No es posible modificar el value directamente en los componentes. Lo correcto es
   // capturar los cambios y actualizar los datos en el State. Para ello hacemos esta
   // función que se ejecuta cada vez que hay un cambio en los input.
-  handleChange(e, key) {
+  handleChange = (e, key) => {
     const fish = this.props.fishes[key];
     // Debemos hacer una copia de los nuevos datos y actualizarlo en el state
     const updatedFish = {
@@ -36,19 +48,19 @@ class Inventory extends React.Component {
       [e.target.name]: e.target.value // sobreescribe las propiedad que disparo el cambio (equiv a name: 'value')
     }
     this.props.updateFish(key, updatedFish);
-  }
+  };
 
-  authenticate(provider) {
+  authenticate = (provider) => {
     // console.log(`Trying to log with ${provider}`);
     base.authWithOAuthPopup(provider, this.authHandler);
-  }
+  };
 
-  logout() {
+  logout = () => {
     base.unauth();
     this.setState({ uid: null });
-  }
+  };
 
-  authHandler(err, authData) {
+  authHandler = (err, authData) => {
     // console.log(authData);
     if (err) {
       console.error(err);
@@ -76,9 +88,9 @@ class Inventory extends React.Component {
         owner: data.owner || authData.user.uid
       });
     });
-  }
+  };
 
-  renderLogin() {
+  renderLogin = () => {
     return(
       <nav className="login">
         <h2>Inventory</h2>
@@ -88,9 +100,9 @@ class Inventory extends React.Component {
         <button className="twitter" onClick={() => this.authenticate('twitter')}>Login with Twitter</button>
       </nav>
     )
-  }
+  };
 
-  renderInventory(key) {
+  renderInventory = (key) => {
     const fish = this.props.fishes[key];
     return (
       <div className="fish-edit" key={key}>
@@ -105,7 +117,7 @@ class Inventory extends React.Component {
         <button onClick={() => this.props.removeFish(key)}>Remove Fish</button>
       </div>
     )
-  }
+  };
 
   render() {
     const logout = <button onClick={this.logout}>Log Out!</button>;
@@ -136,15 +148,33 @@ class Inventory extends React.Component {
       </div>
     )
   }
+
+  static propTypes = {
+    fishes: React.PropTypes.object.isRequired,
+    addFish: React.PropTypes.func.isRequired,
+    updateFish: React.PropTypes.func.isRequired,
+    removeFish: React.PropTypes.func.isRequired,
+    loadSamples: React.PropTypes.func.isRequired,
+    storeId: React.PropTypes.string.isRequired
+  };
 }
 
-Inventory.propTypes = {
-  fishes: React.PropTypes.object.isRequired,
-  addFish: React.PropTypes.func.isRequired,
-  updateFish: React.PropTypes.func.isRequired,
-  removeFish: React.PropTypes.func.isRequired,
-  loadSamples: React.PropTypes.func.isRequired,
-  storeId: React.PropTypes.string.isRequired
-}
+/*
+*  NOTA:
+*  También puedo mover la declaración de las PropTypes dentro del
+*  ámbito del componente.
+*  El modificador 'static' es para indicar que no debe generarse
+*  una copia con cada instancia. Dichos valores son siempre los 
+*  mismos.
+*  ⬇⬇⬇⬇
+ */
+// Inventory.propTypes = {
+//   fishes: React.PropTypes.object.isRequired,
+//   addFish: React.PropTypes.func.isRequired,
+//   updateFish: React.PropTypes.func.isRequired,
+//   removeFish: React.PropTypes.func.isRequired,
+//   loadSamples: React.PropTypes.func.isRequired,
+//   storeId: React.PropTypes.string.isRequired
+// }
 
 export default Inventory;

@@ -25,12 +25,26 @@ class Fish extends React.Component {
       </li>
     )
   }
+  
+  static propTypes = {
+    details: React.PropTypes.object.isRequired,
+    index: React.PropTypes.string.isRequired,
+    addToOrder: React.PropTypes.func.isRequired
+  };
 }
-
-Fish.propTypes = {
-  details: React.PropTypes.object.isRequired,
-  index: React.PropTypes.string.isRequired,
-  addToOrder: React.PropTypes.func.isRequired
-}
+/*
+*  NOTA:
+*  También puedo mover la declaración de las PropTypes dentro del
+*  ámbito del componente.
+*  El modificador 'static' es para indicar que no debe generarse
+*  una copia con cada instancia. Dichos valores son siempre los 
+*  mismos.
+*  ⬇⬇⬇⬇
+ */
+// Fish.propTypes = {
+//   details: React.PropTypes.object.isRequired,
+//   index: React.PropTypes.string.isRequired,
+//   addToOrder: React.PropTypes.func.isRequired
+// }
 
 export default Fish;

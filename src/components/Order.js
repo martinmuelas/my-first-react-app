@@ -3,12 +3,23 @@ import { formatPrice } from '../helpers'
 import CSSTransitionGroup from 'react-addons-css-transition-group';
 
 class Order extends React.Component {
-  constructor() {
-    super();
-    this.renderOrder = this.renderOrder.bind(this);
-  }
+  /* 
+  *  NOTA:
+  *  Puedo ahorrarme el Binding de los métodos utilizando
+  *  'Property Initializers'. Esto es, declarar los métodos
+  *  como variables asociadas a funciones flecha. Transformo
+  *  cada método en una variable a la que se le asigna la 
+  *  función flecha correspondiente.
+  *  Luego, en este caso, el constructor pierde serntido y
+  *  puedo descartarlo.
+  *  ⬇⬇⬇⬇
+  *  */
+  // constructor() {
+  //   super();
+  //   this.renderOrder = this.renderOrder.bind(this);
+  // }
 
-  renderOrder(key) {
+  renderOrder = (key) => {
     const fish = this.props.fishes[key];
     const count = this.props.order[key];
     // Puedo generar un botón con su comportamiento incluído y almacenar el JSX
@@ -35,7 +46,7 @@ class Order extends React.Component {
         <span className="price">{formatPrice(count * fish.price)}</span>
       </li>
     )
-  }
+  };
 
 
   render() {
@@ -76,12 +87,27 @@ class Order extends React.Component {
       </div>
     )
   }
+
+  static propTypes = {
+    order: React.PropTypes.object.isRequired,
+    fishes: React.PropTypes.object.isRequired,
+    removeFromOrder: React.PropTypes.func.isRequired
+  };
 }
 
-Order.propTypes = {
-  order: React.PropTypes.object.isRequired,
-  fishes: React.PropTypes.object.isRequired,
-  removeFromOrder: React.PropTypes.func.isRequired
-};
+/*
+*  NOTA:
+*  También puedo mover la declaración de las PropTypes dentro del
+*  ámbito del componente.
+*  El modificador 'static' es para indicar que no debe generarse
+*  una copia con cada instancia. Dichos valores son siempre los 
+*  mismos.
+*  ⬇⬇⬇⬇
+ */
+// Order.propTypes = {
+//   order: React.PropTypes.object.isRequired,
+//   fishes: React.PropTypes.object.isRequired,
+//   removeFromOrder: React.PropTypes.func.isRequired
+// };
 
 export default Order;

@@ -7,21 +7,41 @@ import sampleFishes from '../sample-fishes';
 import base from '../base';
 
 class App extends React.Component {
+    /* 
+    *  NOTA:
+    *  Puedo ahorrarme el Binding de los métodos utilizando
+    *  'Property Initializers'. Esto es, declarar los métodos
+    *  como variables asociadas a funciones flecha. Transformo
+    *  cada método en una variable a la que se le asigna la 
+    *  función flecha correspondiente.
+    *  Luego, en este caso, el constructor pierde serntido y
+    *  puedo descartarlo.
+    *  ⬇⬇⬇⬇
+    *  */
   
-  constructor() {
-    super();
-    this.addFish = this.addFish.bind(this);
-    this.updateFish = this.updateFish.bind(this);
-    this.removeFish = this.removeFish.bind(this);
-    this.loadSamples = this.loadSamples.bind(this);
-    this.addToOrder = this.addToOrder.bind(this);
-    this.removeFromOrder = this.removeFromOrder.bind(this);
+  // constructor() {
+    // super();
+    // this.addFish = this.addFish.bind(this);
+    // this.updateFish = this.updateFish.bind(this);
+    // this.removeFish = this.removeFish.bind(this);
+    // this.loadSamples = this.loadSamples.bind(this);
+    // this.addToOrder = this.addToOrder.bind(this);
+    // this.removeFromOrder = this.removeFromOrder.bind(this);
 
-    // getInitialState
-    this.state = {
-      fishes: {},
-      order: {}
-    }
+    // getInitialState (lo muevo fuera del constructor)
+    // this.state = {
+    //   fishes: {},
+    //   order: {}
+    // }
+  // }
+
+  /*
+  *  Puedo sacar esta declaración fuera del constructor y establecer
+  *  el valor global del state
+  *  */
+  state = {
+    fishes: {},
+    order: {}
   }
 
   // Generamos los métodos componentWillMount() y componentWillUnmount()
@@ -62,7 +82,7 @@ class App extends React.Component {
       JSON.stringify(nextState.order));
   }
 
-  addFish(fish) {
+  addFish = (fish) => {
     // Para actualizar el state, primero debemos hacer una copia del state actual
     const fishes = {...this.state.fishes};
     // Ahora vamos a insertar el nuevo fish, pero para eso necesito generar una
@@ -74,31 +94,31 @@ class App extends React.Component {
     this.setState({ fishes: fishes });
     // Listo, tengo la función que actualiza el estado, ¿como la llamo desde un
     // elemento hijo como Inventory? >>> a través de una 'Props', que agrego en Inventory.
-  }
+  };
 
-  updateFish(key, updatedFish) {
+  updateFish = (key, updatedFish) => {
     // 1ro: Copio el state actual
     const fishes = {...this.props.fishes};
     // 2do: Actualizo el valor del fish
     fishes[key] = updatedFish;
     // 3ro: Actualizo el state
     this.setState({ fishes });
-  }
+  };
 
-  removeFish(key) {
+  removeFish = (key) => {
     // 1ro: Copio el state actual
     const fishes = {...this.props.fishes};
     // 2do: Elimino el fish indicado
     fishes[key] = null; // Podría haber sido: delete fishes[key]; pero no funciona bien con Firebase
     // 3ro: Actualizo el State
     this.setState({ fishes });
-  }
+  };
 
-  loadSamples() {
+  loadSamples = () => {
     this.setState({ fishes: sampleFishes });
-  }
+  };
 
-  addToOrder(key) {
+  addToOrder = (key) => {
     // 1ro: Hago copia del State:
     const order = {...this.state.order};
     // 2do: Agrego o actualizo el item en la orden
@@ -106,16 +126,16 @@ class App extends React.Component {
     order[key] = order[key] + 1 || 1;
     // 3ro: Actualizo el estado
     this.setState({ order });
-  }
+  };
 
-  removeFromOrder(key) {
+  removeFromOrder = (key) => {
     // 1ro: Copio el state actual
     const order = {...this.state.order};
     // 2do: Elimino el fish indicado   
     delete order[key];
     // 3ro: Actualizo el state
     this.setState({ order });
-  }
+  };
 
   render() {
     return (
@@ -152,11 +172,24 @@ class App extends React.Component {
       </div>
     )
   }
+
+  static propTypes = {
+    params: React.PropTypes.object.isRequired
+  }
 }
 
-App.propTypes = {
-  params: React.PropTypes.object.isRequired
-}
+/*
+*  NOTA:
+*  También puedo mover la declaración de las PropTypes dentro del
+*  ámbito del componente.
+*  El modificador 'static' es para indicar que no debe generarse
+*  una copia con cada instancia. Dichos valores son siempre los 
+*  mismos.
+*  ⬇⬇⬇⬇
+ */
+// App.propTypes = {
+//   params: React.PropTypes.object.isRequired
+// }
 
 export default App;
 

@@ -2,14 +2,25 @@ import React from 'react';
 import { getFunName } from '../helpers.js'
 
 class StorePicker extends React.Component {
+  /* 
+  *  NOTA:
+  *  Puedo ahorrarme el Binding de los métodos utilizando
+  *  'Property Initializers'. Esto es, declarar los métodos
+  *  como variables asociadas a funciones flecha. Transformo
+  *  cada método en una variable a la que se le asigna la 
+  *  función flecha correspondiente.
+  *  Luego, en este caso, el constructor pierde serntido y
+  *  puedo descartarlo.
+  *  ⬇⬇⬇⬇
+  *  */
   // Tenemos que asociar el valor de 'this' al del componente
   // por eso creamos un constructor
-  constructor() {
-    super(); // Genera primero el React Component, luego instancia el obj
-    this.goToStore = this.goToStore.bind(this);
-  }
+  // constructor() {
+  //   super(); // Genera primero el React Component, luego instancia el obj
+  //   this.goToStore = this.goToStore.bind(this);
+  // }
 
-  goToStore(e) {
+  goToStore = (e) => {
     e.preventDefault();
     console.log('Cambiaste la URL');
     // Primero capturamos el texto del input
@@ -18,7 +29,7 @@ class StorePicker extends React.Component {
     // Segundo cambiamos del '/' al '/store/:storeId'
     this.context.router.transitionTo(`/store/${storeId}`);
     
-  }
+  };
 
   render() {
     return (
@@ -36,10 +47,23 @@ class StorePicker extends React.Component {
       </form>
     )
   }
+
+  static contextTypes = {
+    router: React.PropTypes.object
+  }
 }
 
-StorePicker.contextTypes = {
-  router: React.PropTypes.object
-}
+/*
+*  NOTA:
+*  También puedo mover la declaración de las PropTypes dentro del
+*  ámbito del componente.
+*  El modificador 'static' es para indicar que no debe generarse
+*  una copia con cada instancia. Dichos valores son siempre los 
+*  mismos.
+*  ⬇⬇⬇⬇
+ */
+// StorePicker.contextTypes = {
+//   router: React.PropTypes.object
+// }
 
 export default StorePicker;
